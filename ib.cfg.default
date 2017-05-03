@@ -1,0 +1,23 @@
+# Folders to save.
+# Many folders can be set separated by comma.
+# Uncomment below and complete.
+#SOURCE_PATH=(
+#		$HOME,
+#)
+
+# Directory where backup are stored.
+# This folder must exist.
+# Uncomment below and complete.
+#DEST_PATH='/mnt'
+
+# Start number backup
+# Uncomment below and complete.
+#START_NUMBER=0
+
+# Number of backup
+# Uncomment below and complete.
+#NUMBER_BACKUP=30
+
+# Time between two backups (n*24h)
+# Uncomment below and complete.
+#TIME_BACKUP=1
