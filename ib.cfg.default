@@ -10,6 +10,12 @@
 # Uncomment below and complete.
 #DEST_PATH='/mnt'
 
+# Files or directory to exclude
+#EXCUDES=(
+#	*~
+#	'exlude.cfg'
+#	)
+	
 # Start number backup
 # Uncomment below and complete.
 #START_NUMBER=0

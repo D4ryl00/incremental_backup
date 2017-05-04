@@ -5,35 +5,37 @@
 # Incremental backups with rsync and hard links
 
 # include local configuration
-if [ -f 'config.cfg' ]; then
-    . config.cfg
+if [ -f 'ib.cfg' ]; then
+    . ./ib.cfg
+else
+    exit 1
 fi
 
 # test variables in config.cfg
 # SOURCE_PATH must be not empty
 if [ ${#SOURCE_PATH[*]} -eq 0 ]; then
     echo 'error: SOURCE_PATH is not defined.'
-    exit(1)
+    exit 1
 fi
 # DEST_PATH must be defined
 if [ -z $DEST_PATH ]; then
     echo 'error: DEST_PATH_PATH is no defined.'
-    exit(1)
+    exit 1
 fi
 # START_NUMBER must be defined
 if [ -z $START_NUMBER ]; then
     echo 'error: START_NUMBER is not defined.'
-    exit(1)
+    exit 1
 fi
 # NUMBER_BACKUP must be not empty
 if [ $NUMBER_BACKUP -eq 0 ]; then
     echo 'error: NUMBER_BACKUP is not defined.'
-    exit(1)
+    exit 1
 fi
 # TIME_BACKUP must be not empty
 if [ $TIME_BACKUP -eq 0 ]; then
     echo 'error: TIME_BACKUP is not defined.'
-    exit(1)
+    exit 1
 fi
 
 DEST_RSYNC_FOLDER="0_`date +%Y%m%d`"
@@ -45,5 +47,5 @@ manage_save.sh $DEST_PATH $START_NUMBER $DAILY_NUMBER $TIME_BACKUP
 #rsync
 for i in "${SOURCE_PATH[@]}"
 do
-    rsync -a --delete --exclude="Audio Video" --exclude="TimeMachineBackup" "$i" $DEST_PATH/$DEST_RSYNC_FOLDER/
+    rsync -a --delete ${EXCLUDES[@]/#/--exclude=} "$i" $DEST_PATH/$DEST_RSYNC_FOLDER/
 done
