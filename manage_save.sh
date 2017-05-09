@@ -19,7 +19,7 @@ INDEX=`expr $OFFSET + $N`
 extract_date () {
     # echo -n to delete newline
     for f in *_*; do
-	echo -n `expr "$f" : ".*${1}_\(.*\)"`
+	echo -n `expr "$f" : "${1}_\(.*\)"`
     done
 }
 
