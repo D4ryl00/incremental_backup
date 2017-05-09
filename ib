@@ -4,9 +4,11 @@
 # Mail: rems14@remibarbero.fr
 # Incremental backups with rsync and hard links
 
+DIR="$(dirname "$0")"
+
 # include local configuration
-if [ -f 'ib.cfg' ]; then
-    . ./ib.cfg
+if [ -f "$DIR/ib.cfg" ]; then
+    . "$DIR/ib.cfg"
 else
     exit 1
 fi
@@ -42,10 +44,10 @@ DEST_RSYNC_FOLDER="0_`date +%Y%m%d`"
 
 # ssh commands manage the stock of backups
 # Arguments: PATH OFFSET_START NUMBER_OF_BACKUP +INTERVAL_TIME(n * 24h)
-manage_save.sh $DEST_PATH $START_NUMBER $DAILY_NUMBER $TIME_BACKUP
+"$DIR/manage_save.sh" $DEST_PATH $START_NUMBER $NUMBER_BACKUP $TIME_BACKUP
 
 #rsync
 for i in "${SOURCE_PATH[@]}"
 do
-    rsync -a --delete ${EXCLUDES[@]/#/--exclude=} "$i" $DEST_PATH/$DEST_RSYNC_FOLDER/
+    rsync -a --delete $(echo "${EXCLUDES[@]/#/--exclude=}") "$i" $DEST_PATH/$DEST_RSYNC_FOLDER/
 done

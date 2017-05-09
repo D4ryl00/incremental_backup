@@ -30,7 +30,7 @@ if [ ! -n "$(find $(pwd) -maxdepth 1 -type d -name "0_*")" ]; then
     mkdir "0_`date +%Y%m%d`"
 fi
 
-YOUNG_ORIGIN_FOLDER="`find $(pwd) -maxdepth 1 -mtime -$I_TIME -type d -name "${OFFSET}_*"`"
+YOUNG_ORIGIN_FOLDER="`find $(pwd) -maxdepth 1 -mtime -${I_TIME} -type d -name "${OFFSET}_*"`"
 ORIGIN_FOLDER="`find $(pwd) -maxdepth 1 -type d -name "${OFFSET}_*"`"
 NEW_FOLDER="${OFFSET}_`date +%Y%m%d`"
 echo 'out of origin test'
