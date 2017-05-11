@@ -11,8 +11,8 @@
 #DEST_PATH='/mnt'
 
 # Files or directory to exclude
-#EXCUDES=(
-#	*~
+#EXCLUDES=(
+#	'*~'
 #	'exlude.cfg'
 #	)
 	
