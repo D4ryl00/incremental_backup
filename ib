@@ -49,5 +49,5 @@ DEST_RSYNC_FOLDER="0_`date +%Y%m%d`"
 #rsync
 for i in "${SOURCE_PATH[@]}"
 do
-    rsync -a --delete $(echo "${EXCLUDES[@]/#/--exclude=}") "$i" $DEST_PATH/$DEST_RSYNC_FOLDER/
+    rsync -a --delete ${EXCLUDES[@]/#/--exclude=} "$i" $DEST_PATH/$DEST_RSYNC_FOLDER/
 done
