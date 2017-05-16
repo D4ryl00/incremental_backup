@@ -44,10 +44,21 @@ DEST_RSYNC_FOLDER="0_`date +%Y%m%d`"
 
 # ssh commands manage the stock of backups
 # Arguments: PATH OFFSET_START NUMBER_OF_BACKUP +INTERVAL_TIME(n * 24h)
-"$DIR/manage_save.sh" $DEST_PATH $START_NUMBER $NUMBER_BACKUP $TIME_BACKUP
+RES="$($DIR/manage_save.sh $DEST_PATH $START_NUMBER $NUMBER_BACKUP $TIME_BACKUP)"
+DO=$(echo $RES | cut -f1 -d ',')
+HARD_LINKS_SOURCE=$(echo $RES | cut -f2 -d ',')
 
 #rsync
-for i in "${SOURCE_PATH[@]}"
-do
-    rsync -a --delete ${EXCLUDES[@]/#/--exclude=} "$i" $DEST_PATH/$DEST_RSYNC_FOLDER/
-done
+if [ "$DO" -eq "1" ]; then
+    if [ ! -z $HARD_LINKS_SOURCE ]; then
+	for i in "${SOURCE_PATH[@]}"
+	do
+	    rsync -a --delete ${EXCLUDES[@]/#/--exclude=} --link-dest=$DEST_PATH/$HARD_LINKS_SOURCE "$i" $DEST_PATH/$DEST_RSYNC_FOLDER/
+	done
+    else # no backup yet
+	for i in "${SOURCE_PATH[@]}"
+	do
+	    rsync -a --delete ${EXCLUDES[@]/#/--exclude=} "$i" $DEST_PATH/$DEST_RSYNC_FOLDER/
+	done    
+    fi
+fi

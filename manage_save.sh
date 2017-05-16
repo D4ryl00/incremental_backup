@@ -25,45 +25,42 @@ extract_date () {
 
 cd $DEST_PATH
 
-# test if there is not backup yet, create the first folder
-if [ ! -n "$(find $(pwd) -maxdepth 1 -type d -name "0_*")" ]; then
-    mkdir "0_`date +%Y%m%d`"
-fi
-
-YOUNG_ORIGIN_FOLDER="`find $(pwd) -maxdepth 1 -mtime -${I_TIME} -type d -name "${OFFSET}_*"`"
-ORIGIN_FOLDER="`find $(pwd) -maxdepth 1 -type d -name "${OFFSET}_*"`"
-NEW_FOLDER="${OFFSET}_`date +%Y%m%d`"
-echo 'out of origin test'
-echo $YOUNG_ORIGIN_FOLDER
-if [ -n "$ORIGIN_FOLDER" ]; then
-    echo 'in origin_folder test'
-    # test if the interval time is respected to make the backup (because empty)
-    if [ -z "$YOUNG_ORIGIN_FOLDER" ]; then
-	echo 'in young test'
-	# delete the oldest backup
-	FOLDER="`find $(pwd) -maxdepth 1 -type d -name "${INDEX}_*"`"
-	if [ -n "$FOLDER" ]; then
-	    rm -rf "$FOLDER"
-	fi
-	echo "index: $INDEX min: `expr $OFFSET + 2` seq: `seq $INDEX -1 $(expr $OFFSET + 2)`"
-	# shift the order of each backup
-	for i in `seq $INDEX -1 $(expr $OFFSET + 2)`;
-	do
-	    j=`expr $i - 1`
-	    echo "i: $i j: $j"
-	    FOLDER="`find $(pwd) -maxdepth 1 -type d -name "${j}_*"`"
-	    if [ -n "$FOLDER" ]; then
-		mv "$FOLDER" "./${i}_`extract_date ${j}`"
-		echo 'mv ok'
+# source folder must exist
+if [ -d ${OFFSET}_* ]; then
+    if [ "0_`date +%Y%m%d`" != 0_* ]; then
+	YOUNG_ORIGIN_FOLDER="`find $(pwd) -maxdepth 1 -mtime -${I_TIME} -type d -name "${OFFSET}_*"`"
+	ORIGIN_FOLDER="${OFFSET}_*"
+	NEW_FOLDER="${OFFSET}_`date +%Y%m%d`"
+	# test if the interval time is respected to make the backup (because empty)
+	if [ ! -d "$YOUNG_ORIGIN_FOLDER" ]; then
+	    # delete the oldest backup
+	    FOLDER="${INDEX}_*"
+	    if [ -d "$FOLDER" ]; then
+      		rm -rf "$FOLDER"
 	    fi
-	done
-	# copy with hard links the newest backup to keep it before rsync it
-	cp -al "$ORIGIN_FOLDER" "$(expr $OFFSET + 1)_`extract_date $OFFSET`"
+	    # shift the order of each backup
+	    for i in `seq $INDEX -1 $(expr $OFFSET + 1)`;
+	    do
+		j=`expr $i - 1`
+		FOLDER="${j}_*"
+		if [ -d "$FOLDER" ]; then
+		    mv "$FOLDER" "./${i}_`extract_date ${j}`"
+		fi
+	    done
+	    echo -n '1,'
+	else #the interval time is not respected
+	    echo -n '0,'
+	fi
+    else # one backup make today, just overwrite it
+	echo -n '1,'
     fi
-
-    # rename the DEST_FOLDER with the current date if OFFSET = 0
-    # for the firt backup only
-    if [ \( $OFFSET -eq 0 \) -a \( "$(pwd)/$NEW_FOLDER" != "$ORIGIN_FOLDER" \) ]; then
-	mv "$ORIGIN_FOLDER" "./$NEW_FOLDER"
-    fi
+else # no backup yet
+    echo -n '1,'
 fi
+
+# return ...
+HARD_LINKS_SOURCE="`expr $OFFSET + 1`_*"
+if [ -d $HARD_LINKS_SOURCE ]; then
+    echo "$HARD_LINKS_SOURCE"
+fi
+
