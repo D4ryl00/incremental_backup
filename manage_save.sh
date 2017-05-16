@@ -35,7 +35,7 @@ if [ -d ${OFFSET}_* ]; then
 	if [ ! -d "$YOUNG_ORIGIN_FOLDER" ]; then
 	    # delete the oldest backup
 	    FOLDER="${INDEX}_*"
-	    if [ -d "$FOLDER" ]; then
+	    if [ -d $FOLDER ]; then
       		rm -rf "$FOLDER"
 	    fi
 	    # shift the order of each backup
@@ -43,8 +43,8 @@ if [ -d ${OFFSET}_* ]; then
 	    do
 		j=`expr $i - 1`
 		FOLDER="${j}_*"
-		if [ -d "$FOLDER" ]; then
-		    mv "$FOLDER" "./${i}_`extract_date ${j}`"
+		if [ -d $FOLDER ]; then
+		    mv $FOLDER "./${i}_`extract_date ${j}`"
 		fi
 	    done
 	    echo -n '1,'
@@ -59,8 +59,8 @@ else # no backup yet
 fi
 
 # return ...
-HARD_LINKS_SOURCE="`expr $OFFSET + 1`_*"
+HARD_LINKS_SOURCE=`expr $OFFSET + 1`_*
 if [ -d $HARD_LINKS_SOURCE ]; then
-    echo "$HARD_LINKS_SOURCE"
+    echo $HARD_LINKS_SOURCE
 fi
 
