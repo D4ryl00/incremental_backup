@@ -13,7 +13,7 @@
 # Files or directory to exclude
 #EXCLUDES=(
 #	'*~'
-#	'exlude.cfg'
+#	'exclude.cfg'
 #	)
 	
 # Start number backup
