@@ -7,10 +7,45 @@
 DIR="$(dirname "$0")"
 
 # include local configuration
-if [ -f "$DIR/ib.cfg" ]; then
-    . "$DIR/ib.cfg"
+while [ $# -gt 0 ]; do
+    case "$1" in
+	-c)
+	    shift
+	    if [ $# -gt 0 ]; then
+		SET_CONFIG=true
+		CONFIG=$1
+	    fi
+	    shift
+	    ;;
+	--config*)
+	    SET_CONFIG=true
+	    CONFIG=$(echo $1 | sed -e 's/^[^=]*=//g')
+	    shift
+	    ;;
+	*)
+	    break
+	    ;;
+    esac
+done
+
+if $SET_CONFIG; then
+    # test if this is relative or absolute path
+    if ! echo "$CONFIG" | grep -q "/"; then
+	CONFIG=./$CONFIG
+    fi
+    if [ -f $CONFIG ]; then
+	. $CONFIG
+    else
+	echo "no config file found"
+	exit 1
+    fi
 else
-    exit 1
+    if [ -f "$DIR/ib.cfg" ]; then
+    . "$DIR/ib.cfg"
+    else
+	echo "no config file found"
+	exit 1
+    fi
 fi
 
 # test variables in config.cfg
