@@ -86,7 +86,7 @@ DEST_RSYNC_FOLDER="0_`date +%Y%m%d`"
 # return string of two fields: "DO HARD_LINKS_SOURCE"
 # 1) DO: tells if rsync must be executed
 # 2) HARD_LINKS_SOURCE: is the folder where rsync make hard links
-RES="$($DIR/manage_save.sh $DEST_PATH $START_NUMBER $NUMBER_BACKUP $TIME_BACKUP)"
+RES="$(sh -x $DIR/manage_save.sh $DEST_PATH $START_NUMBER $NUMBER_BACKUP $TIME_BACKUP)"
 DO=$(echo $RES | cut -f1 -d ',')
 HARD_LINKS_SOURCE=$(echo $RES | cut -f2 -d ',')
 

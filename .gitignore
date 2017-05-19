@@ -1,2 +1,4 @@
 ib.cfg
 *~
+/tests/source/*
+/tests/sauv/*
